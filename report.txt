@@ -1,0 +1,1 @@
+Total learners: 5\nPassed: 3\nFailed: 2\nAverage score: 63.2\n
