@@ -2,42 +2,31 @@
 
 import csv
 
-CSV_FILE = "hubs.csv"
-REPORT_FILE = "report.txt"
-PASS_MARK = 50
+try:
+    with open("hubs.csv", "r", newline="", encoding="utf-8") as f:
+        rows = list(csv.DictReader(f))
+except FileNotFoundError:
+    print("hubs.csv not found")
+    rows = []
 
+total = 0
+passed = 0
 
-def main():
-    try:
-        with open(CSV_FILE, "r", newline="", encoding="utf-8") as file:
-            learners = list(csv.DictReader(file))
-    except FileNotFoundError:
-        print(f"{CSV_FILE} not found")
-        return
+for row in rows:
+    # CSV values are text, so convert the score to an integer.
+    score = int(row["score"])
+    total += score
+    if score >= 50:
+        passed += 1
 
-    if not learners:
-        print("No learner records found.")
-        return
+failed = len(rows) - passed
+average = round(total / len(rows), 1) if rows else 0.0
 
-    scores = [float(row["score"]) for row in learners]
-    total_learners = len(scores)
-    passed = sum(score >= PASS_MARK for score in scores)
-    failed = total_learners - passed
-    average_score = sum(scores) / total_learners
+with open("report.txt", "w", encoding="utf-8") as f:
+    f.write("LEARNER REPORT\n")
+    f.write("Total learners: " + str(len(rows)) + "\n")
+    f.write("Passed: " + str(passed) + "\n")
+    f.write("Failed: " + str(failed) + "\n")
+    f.write("Average score: " + str(average) + "\n")
 
-    report = (
-        f"Total learners: {total_learners}\n"
-        f"Passed: {passed}\n"
-        f"Failed: {failed}\n"
-        f"Average score: {average_score:.1f}\n"
-    )
-
-    with open(REPORT_FILE, "w", encoding="utf-8") as file:
-        file.write(report)
-
-    print(report, end="")
-    print(f"Report saved to {REPORT_FILE}")
-
-
-if __name__ == "__main__":
-    main()
+print("Report written to report.txt")
