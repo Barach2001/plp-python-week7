@@ -1,0 +1,1 @@
+Remember to practise Python file handling.\nComplete the Week 7 assignment.\n
